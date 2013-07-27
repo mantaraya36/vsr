@@ -13,6 +13,8 @@
 #include <vector>
 
 #include "vsr.h"
+#include "vsr_op.h"
+#include "vsr_interp.h"
 
 #include "gfx_data.h"
 
@@ -144,13 +146,13 @@ namespace vsr {
         
         
         //VOXEL IDX
-        Vxl vxl(int ix) const { return mVxl[ix]; }
-        Vxl& vxl(int ix)  { return mVxl[ix]; }
+        gfx::Vxl vxl(int ix) const { return mVxl[ix]; }
+        gfx::Vxl& vxl(int ix)  { return mVxl[ix]; }
         
-        Nbr nbr(int ix) const { return mNbr[ix]; }
-        Nbr& nbr(int ix)  { return mNbr[ix]; }
-        Nbr nbrVxl(int ix) const { return mNbrVxl[ix]; }
-        Nbr& nbrVxl(int ix)  { return mNbrVxl[ix]; }
+        gfx::Nbr nbr(int ix) const { return mNbr[ix]; }
+        gfx::Nbr& nbr(int ix)  { return mNbr[ix]; }
+        gfx::Nbr nbrVxl(int ix) const { return mNbrVxl[ix]; }
+        gfx::Nbr& nbrVxl(int ix)  { return mNbrVxl[ix]; }
         
         /* Totals and Offsets From Center */
         /*! Total Width */
@@ -175,27 +177,27 @@ namespace vsr {
         void alloc(){
             mPoint = new Pnt[mNum];
 
-            mNbr = new Nbr[mNum];
+            mNbr = new gfx::Nbr[mNum];
 
-            mVxl = new Vxl[mNumVxl];
-            mNbrVxl = new Nbr[mNumVxl];
+            mVxl = new gfx::Vxl[mNumVxl];
+            mNbrVxl = new gfx::Nbr[mNumVxl];
         }
         
         void init(){
             
             
             ITER
-                mPoint[ tidx ]  = Ro::null( px(i),  py(j),  pz(k) ); 
+                mPoint[ tidx ]  = vsr::Ro::null( px(i),  py(j),  pz(k) );
                         
                 int type = 0;
-                type |= (k==0) ? FRONT : 0;
-                type |= (k==mDepth-1) ? BACK: 0;					
-                type |= (j==0) ? BOTTOM : 0;
-                type |= (j==mHeight-1) ? TOP: 0;					
-                type |= (i==0) ? LEFT : 0;
-                type |= (i==mWidth-1) ? RIGHT: 0;					
+                type |= (k==0) ? gfx::FRONT : 0;
+                type |= (k==mDepth-1) ? gfx::BACK: 0;
+                type |= (j==0) ? gfx::BOTTOM : 0;
+                type |= (j==mHeight-1) ? gfx::TOP: 0;
+                type |= (i==0) ? gfx::LEFT : 0;
+                type |= (i==mWidth-1) ? gfx::RIGHT: 0;
             
-                mNbr[tidx] = Nbr(tidx, mWidth, mHeight, mDepth, type);
+                mNbr[tidx] = gfx::Nbr(tidx, mWidth, mHeight, mDepth, type);
 
             ITEND
 
@@ -210,15 +212,15 @@ namespace vsr {
                 
                 //assign face information
                 int type = 0;
-                type |= (k==1) ? FRONT : 0;
-                type |= (k==mDepth-2) ? BACK: 0;					
-                type |= (j==1) ? BOTTOM : 0;
-                type |= (j==mHeight-2) ? TOP: 0;					
-                type |= (i==1) ? LEFT : 0;
-                type |= (i==mWidth-2) ? RIGHT: 0;	
+                type |= (k==1) ? gfx::FRONT : 0;
+                type |= (k==mDepth-2) ? gfx::BACK: 0;
+                type |= (j==1) ? gfx::BOTTOM : 0;
+                type |= (j==mHeight-2) ? gfx::TOP: 0;
+                type |= (i==1) ? gfx::LEFT : 0;
+                type |= (i==mWidth-2) ? gfx::RIGHT: 0;
                 
                 mVxl[ix].type = type;					
-                mNbrVxl[ix] = Nbr(ix, mWidth, mHeight, mDepth, type);
+                mNbrVxl[ix] = gfx::Nbr(ix, mWidth, mHeight, mDepth, type);
             BOUNDEND
             
             //Assign Edges and Faces idx
@@ -233,9 +235,9 @@ namespace vsr {
         }
         			
         /*! Voxel of Vector v */						
-        Vxl vxlAt( const Vec& tv ) const { 
+        gfx::Vxl vxlAt( const Vec& tv ) const {
 		
-            Vxl vxl;
+            gfx::Vxl vxl;
             
             Vec v = bound(tv);
             
@@ -303,7 +305,7 @@ namespace vsr {
         
         
         ///  Routines to Find Face and Edge Boundary 
-        void FE( Nbr nb){
+        void FE( gfx::Nbr nb){
 
         //one undefined neighbor is a face
 		int i = 0;
@@ -344,7 +346,7 @@ namespace vsr {
 	}	
     
     //see above
-    void vxlFE( Nbr nb){
+    void vxlFE( gfx::Nbr nb){
 		int i = 0;
 		while (i < 7){
 			if (nb[i] == -1) { 
@@ -379,7 +381,7 @@ namespace vsr {
 	}
     
             /*! Indicex of surface at u, v [0, 1]*/
-        Patch surfIdx(double u, double v){
+        gfx::Patch surfIdx(double u, double v){
         
             double fw = u * (mWidth - 1);
             double fh = v * (mHeight - 1);
@@ -398,11 +400,11 @@ namespace vsr {
             int c= ( idx ( iw + 1, ih + 1, 0 ) );
             int d= ( idx ( iw, ih + 1, 0 ) );
             
-            return Patch( a, b, c, d, rw, rh);
+            return gfx::Patch( a, b, c, d, rw, rh);
         }
         
         /*! Volume Index at u,v,w [0-1] */
-        VPatch vidx(double u, double v, double w) const{
+        gfx::VPatch vidx(double u, double v, double w) const{
             double fw = u * (mWidth - 1);
             double fh = v * (mHeight - 1);
             double fd = w * (mDepth-1);
@@ -428,11 +430,11 @@ namespace vsr {
             int g= ( idx ( iw + 1, ih + 1, id +1) );
             int h= ( idx ( iw, ih + 1, id +1) );
             
-            return VPatch( a, b, c, d, e, f, g, h, rw, rh, rd);
+            return gfx::VPatch( a, b, c, d, e, f, g, h, rw, rh, rd);
         }
         
         /*! Indices of Line at T */
-        Patch idxU(double t){
+        gfx::Patch idxU(double t){
             double fw = t * (mWidth - 1);
             
             int iw = floor ( fw );
@@ -443,7 +445,7 @@ namespace vsr {
             int b = idx(iw+1, 0, 0);
             int c = idx(iw+2, 0, 0);
             
-            return Patch(a, b, 0, 0, rw, 0);
+            return gfx::Patch(a, b, 0, 0, rw, 0);
         }
         
     
@@ -460,7 +462,7 @@ namespace vsr {
         
         Pnt surf(double u, double v){
             
-            Patch p =  surfIdx(u,v);
+            gfx::Patch p =  surfIdx(u,v);
             
             Pnt a = mPoint[ p.a ];//gridAt ( iw, ih, 0 );
             Pnt b = mPoint[ p.b ];//gridAt ( iw + 1, ih, 0 );
@@ -511,10 +513,10 @@ namespace vsr {
         Pnt * mPoint;
         
         //vxl access
-        Vxl *mVxl;
+        gfx::Vxl *mVxl;
         
         //nbr access
-        Nbr *mNbr, *mNbrVxl;
+        gfx::Nbr *mNbr, *mNbrVxl;
         
         //INDICES
         vector <int> mFace;

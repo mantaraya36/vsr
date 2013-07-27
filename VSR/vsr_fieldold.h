@@ -85,8 +85,6 @@
 #include "vsr_frame.h"
 #include "vsr_matrix.h"
 
-//#include "vsr_draw.h"
-
 using std::ostream;
 
 namespace vsr {

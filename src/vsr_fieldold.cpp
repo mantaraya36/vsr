@@ -8,9 +8,10 @@
  */
 
 #include "vsr.h"
-#include "vsr_lattice.h"
-//#include "vsr_draw.h"
+//#include "vsr_lattice.h"
+#include "vsr_fieldold.h"
 
+#include <cstdlib>
 
 namespace vsr {
 
