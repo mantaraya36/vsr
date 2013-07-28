@@ -218,7 +218,7 @@ namespace vsr{
                     static MBO circle ( Mesh::Circle(.5) );
                     static float mf[16];
                     
-                    Mat4f mat = Xf::mat(cir);
+                    gfx::Mat4f mat = Xf::mat(cir);
                     mat.fill(mf);
                     program.uniform("submodel", mf );    
 
@@ -236,7 +236,7 @@ namespace vsr{
                     
                     for (int i = 0; i < num; ++i){
                     
-                        Mat4f mat = mvm * Xf::mat(fcir[i]);
+                        gfx::Mat4f mat = mvm * Xf::mat(fcir[i]);
                         mat.fill(mf);
 //                        program.uniform("submodel", mf );    
                         program.uniform("modelViewProjection", mf);

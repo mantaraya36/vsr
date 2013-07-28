@@ -56,8 +56,8 @@ void simpleShader(GLVApp& app){
     Vertex lightpos(pt[0],pt[1],pt[2]);
     Pipe::Update(point, &lightpos );
 
-    Vec4f vv(0,0,1,1);
-    Vec4f nv = app.scene().xf.modelViewMatrixf() * vv;
+//    vsr::Vec4f vv(0,0,1,1);
+//    vsr::Vec4f nv = app.scene().xf.modelViewMatrixf() * vv;
 
     Pipe::shaderprogram -> bind();
     
@@ -71,11 +71,11 @@ void simpleShader(GLVApp& app){
         Pipe::shaderprogram -> uniform("normalMatrix", app.scene().xf.normal );
     
         Pipe::Begin(slab);
-            Pipe::DrawArray(slab, GL::TS);
+            Pipe::DrawArray(slab, vsr::GL::TS);
         Pipe::End(slab);   
 
         Pipe::Begin(point);
-            Pipe::DrawArray(point, GL::P);
+            Pipe::DrawArray(point, vsr::GL::P);
         Pipe::End(point);   
 
     Pipe::shaderprogram -> unbind();
@@ -99,7 +99,7 @@ void shaderTest(GLVApp& app){
         start = -1;
         focal = 90;
 
-        GL::Draw::Pipe::InitBufferObjects(); 
+        vsr::GL::Draw::Pipe::InitBufferObjects();
 
         static Cir c = CYZ(1);
         vector<Cir> vc;    
@@ -108,32 +108,32 @@ void shaderTest(GLVApp& app){
             vc.push_back( c.trs(3.0 * i/num, 0,0) );
         }
         
-        GL::Draw::Pipe::Buffer( Mesh::Skin( &vc[0], num, 10 ), 100 );
+        vsr::GL::Draw::Pipe::Buffer( Mesh::Skin( &vc[0], num, 10 ), 100 );
     
     END
     
     app.camera().focal( PI * focal/180.0 );
     
-    GL::Draw::Pipe::shaderprogram -> bind();
+    vsr::GL::Draw::Pipe::shaderprogram -> bind();
     
-        GL::Draw::Pipe::shaderprogram -> uniform("lightPosition",-1,0,0);
+        vsr::GL::Draw::Pipe::shaderprogram -> uniform("lightPosition",-1,0,0);
         
        // GL::Draw::Pipe::vatt.enable();
         
         // TRANFORMATION MATRICES
-        GL::Draw::Pipe::shaderprogram -> uniform("projection", app.scene().xf.proj);
-        GL::Draw::Pipe::shaderprogram -> uniform("view", app.scene().xf.view );
-        GL::Draw::Pipe::shaderprogram -> uniform("model", app.scene().xf.model );
-        GL::Draw::Pipe::shaderprogram -> uniform("modelView", app.scene().xf.modelView );
+        vsr::GL::Draw::Pipe::shaderprogram -> uniform("projection", app.scene().xf.proj);
+        vsr::GL::Draw::Pipe::shaderprogram -> uniform("view", app.scene().xf.view );
+        vsr::GL::Draw::Pipe::shaderprogram -> uniform("model", app.scene().xf.model );
+        vsr::GL::Draw::Pipe::shaderprogram -> uniform("modelView", app.scene().xf.modelView );
 
         
         //DRAW
-        GL::Draw::Pipe::Begin(100);
-        GL::Draw::Pipe::DrawElements(100, GL::TS, start, offset);
-        GL::Draw::Pipe::End(100);
+        vsr::GL::Draw::Pipe::Begin(100);
+        vsr::GL::Draw::Pipe::DrawElements(100, vsr::GL::TS, start, offset);
+        vsr::GL::Draw::Pipe::End(100);
         
     
-    GL::Draw::Pipe::shaderprogram -> unbind();
+    vsr::GL::Draw::Pipe::shaderprogram -> unbind();
 
 }
 
@@ -250,8 +250,8 @@ void render2texture(GLVApp& app){
         program.unbind();
                 
         //attach Texture to Framebuffer's color attachment
-        fbo.attach(texture, GL::COLOR);
-        fbo.attach( RBO(16,16, GL::DEPTHCOMP), GL::DEPTH);  // is this needed?
+        fbo.attach(texture, vsr::GL::COLOR);
+        fbo.attach( RBO(16,16, vsr::GL::DEPTHCOMP), vsr::GL::DEPTH);  // is this needed?
     END
     
     //STEP 1: RENDER TO TEXTURE
@@ -265,8 +265,8 @@ void render2texture(GLVApp& app){
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
         ////CLEAR INFO ///
-        GL::clearColor();
-        GL::clear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+        vsr::GL::clearColor();
+        vsr::GL::clear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
         //// Draw Scene ////
         glColor3f(1,1,1);
@@ -355,7 +355,7 @@ void fixedfunc(GLVApp& app){
         
         ITJ(i,f.num()) 
             //TOUCH(f[i]);
-            Draw::Render( f[i] ) ;
+            vsr::Draw::Render( f[i] ) ;
         END
 }
 

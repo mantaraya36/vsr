@@ -31,7 +31,7 @@ add_library(vsr ${VSR_SRC} ${VSR_HEADERS})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/bin)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
 
 if(GFX EQUAL 1)
 find_package(GLV REQUIRED)
@@ -68,7 +68,7 @@ target_link_libraries(vsr ${VSR_LINK_LIBRARIES})
 if((NOT NO_EXAMPLES) AND (GFX EQUAL 1))
 # basics
 
-set(EXAMPLE_DIRS basics boosts fields kinematics pending twists)
+set(EXAMPLE_DIRS basics boosts fields kinematics twists)
 foreach(dir ${EXAMPLE_DIRS})
   file(GLOB EXAMPLE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} examples/${dir}/*.cpp)
   foreach(example ${EXAMPLE_FILES})
@@ -99,3 +99,7 @@ endforeach(dir)
 #endif(GAMMA_FOUND)
 endif((NOT NO_EXAMPLES) AND (GFX EQUAL 1))
 
+
+# installation
+install(DIRECTORY VSR/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include/VSR)
+install(TARGETS vsr DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
