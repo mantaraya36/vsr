@@ -80,6 +80,7 @@ foreach(dir ${EXAMPLE_DIRS})
           target_link_libraries(${dir}_${EXAMPLE_NAME} ${AUDIOUNIT_FM})
         endif()
         target_link_libraries(${dir}_${EXAMPLE_NAME} ${EXAMPLE_LINUX_LIBS})
+    include_directories(${VSR_INCLUDE_DIRS})
   endforeach(example)
 endforeach(dir)
 
