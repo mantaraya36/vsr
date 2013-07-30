@@ -3,6 +3,12 @@ project (vsr)
 
 set(GFX 1)
 set(BUILD_GL2PS)
+set(CMAKE_BUILD_TYPE Release)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+set(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -fpeel-loops" )
+message("Building release version")
+endif (CMAKE_BUILD_TYPE STREQUAL "Release")
 
 set(VSR_SRC
  src/vsr_mv.cpp
