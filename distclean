@@ -1,0 +1,4 @@
+PKG_NAME=vsr
+
+rm -rf build/ CMakeLists.txt.user CMakeCache.txt CMakeFiles/ cmake_install.cmake Makefile build.ninja rules.ninja ${PKG_NAME}.xcodeproj ${PKG_NAME}.build CMakeScripts
+
