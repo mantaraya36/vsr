@@ -1,13 +1,15 @@
-cmake_minimum_required (VERSION 2.8)
-project (vsr)
+cmake_minimum_required(VERSION 2.8)
+project(vsr)
 
 set(GFX 1)
 set(BUILD_GL2PS)
 set(CMAKE_BUILD_TYPE Release)
 
+message("==== Configuring vsr")
+
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
 set(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE} -fpeel-loops" )
-message("Building release version")
+message("vsr: Building release version")
 endif (CMAKE_BUILD_TYPE STREQUAL "Release")
 
 set(VSR_SRC
@@ -17,22 +19,19 @@ set(VSR_SRC
 )
 
 if(GFX)
-
-set(VSR_SRC ${VSR_SRC}
- src/vsr_camera.cpp
- src/vsr_interface.cpp
- src/vsr_gl.cpp
- externals/gl2ps/gl2ps.c
-)
+  set(VSR_SRC ${VSR_SRC}
+    src/vsr_camera.cpp
+    src/vsr_interface.cpp
+    src/vsr_gl.cpp
+    externals/gl2ps/gl2ps.c
+  )
 endif(GFX)
 
 file(GLOB VSR_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} VSR/*.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/VSR)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/externals)
 
-#add_subdirectory(externals/gl2ps)
 add_library(vsr ${VSR_SRC} ${VSR_HEADERS})
-
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/bin)
@@ -40,10 +39,18 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/bin)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
 
 if(GFX EQUAL 1)
-find_package(GLV REQUIRED)
-find_package(GLUT REQUIRED)
-find_package(GLEW REQUIRED)
-find_package(OpenGL REQUIRED)
+
+if(NOT ALLOSYSTEM_BUILD)
+find_package(GLV REQUIRED QUIET)
+else()
+#set(GLV_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../GLV)
+#get_property(GLV_LIBRARY TARGET GLV PROPERTY LOCATION)
+#set(GLV_LIBRARY ${glv_location})
+endif(NOT ALLOSYSTEM_BUILD)
+
+find_package(GLUT REQUIRED QUIET)
+find_package(GLEW REQUIRED QUIET)
+find_package(OpenGL REQUIRED QUIET)
 
 set(VSR_INCLUDE_DIRS ${VSR_INCLUDE_DIRS}
   ${GLEW_INCLUDE_DIR}
@@ -72,7 +79,6 @@ target_link_libraries(vsr ${VSR_LINK_LIBRARIES})
 #--------------------------------------------------------------------------
 # Examples
 if((NOT NO_EXAMPLES) AND (GFX EQUAL 1))
-# basics
 
 set(EXAMPLE_DIRS basics boosts fields kinematics twists)
 foreach(dir ${EXAMPLE_DIRS})
