@@ -38,6 +38,8 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build/bin)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_modules")
 
+include(cotire) # support for pre-compiled headers
+
 if(GFX EQUAL 1)
 
   if(ALLOSYSTEM_BUILD)
@@ -79,6 +81,7 @@ if(GFX EQUAL 1)
     )
 endif(GFX EQUAL 1)
 target_link_libraries(vsr ${VSR_LINK_LIBRARIES})
+#cotire(vsr) # Use pre-compiled headers
 
 #--------------------------------------------------------------------------
 # Examples
