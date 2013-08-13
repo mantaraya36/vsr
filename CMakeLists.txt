@@ -4,6 +4,7 @@ project(vsr)
 set(GFX 1)
 set(BUILD_GL2PS)
 set(CMAKE_BUILD_TYPE Release)
+set(BUILD_GLV_SUBMODULE 1 CACHE STRING "Build GLV submodule")
 
 message("==== Configuring vsr")
 
@@ -53,6 +54,15 @@ if(GFX EQUAL 1)
   else()
     find_package(GLV REQUIRED)
   endif(ALLOSYSTEM_BUILD)
+
+  if(BUILD_GLV_SUBMODULE)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/GLV/Makefile")
+      execute_process(COMMMAND "make"
+	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/GLV/")
+    else()
+      include_subdirectory(GLV)
+    endif()
+  endif(BUILD_GLV_SUBMODULE)
 
   find_package(GLUT REQUIRED QUIET)
   find_package(GLEW REQUIRED QUIET)
