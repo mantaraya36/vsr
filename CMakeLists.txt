@@ -48,6 +48,7 @@ if(GFX EQUAL 1)
       get_property(glv_location TARGET GLV PROPERTY LOCATION)
       set(GLV_LIBRARY ${glv_location})
       message (STATUS "glv_location for alloGLV == ${glv_location}")
+      set(BUILD_GLV_SUBMODULE 0)
     else()
       find_package(GLV REQUIRED)
     endif(BUILD_GLV)
@@ -60,7 +61,7 @@ if(GFX EQUAL 1)
       execute_process(COMMMAND "make"
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/GLV/")
     else()
-      include_subdirectory(GLV)
+      add_subdirectory(GLV)
     endif()
   endif(BUILD_GLV_SUBMODULE)
 
@@ -83,7 +84,7 @@ if(GFX EQUAL 1)
     #	endif
     )
 
-  set(VSR_LINK_LIBRARIES ${VSR_LINK_LIBRARIES}
+  set(VSR_LINK_LIBRARIES
     ${GLV_LIBRARY}
     ${GLUT_LIBRARY}
     ${GLEW_LIBRARY}
